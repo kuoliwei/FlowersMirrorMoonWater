@@ -22,6 +22,7 @@ Shader "Custom/SimpleHole"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+
             float4 _HoleCenter;
             float _HoleRadius;
 

@@ -152,6 +152,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: a9f289750becf65438a8b5391ad0f57e, type: 2}
+  freqs:
+  - 8
+  - 12.3
+  - 21.7
+  - 33.1
+  amps:
+  - 0.03
+  - 0.015
+  - 0.007
+  - 0.01
+  autoPulse: 0
+  maxRadius: 0
+  radiusSpeed: 1.5
+  holeCenterX: 0.5
+  holeCenterY: 0.5
+  radiusFactorSpeed: 0.5
+  amplitude: 0.4
+  frequency: 1.5
+  phase: 0
 --- !u!4 &621612887
 Transform:
   m_ObjectHideFlags: 0
@@ -318,11 +337,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0
+  far clip plane: 2
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 0.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -347,7 +366,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
