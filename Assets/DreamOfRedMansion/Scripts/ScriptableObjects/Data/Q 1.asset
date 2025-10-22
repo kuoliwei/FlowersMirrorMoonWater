@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f732898a90c5e647815154a764aa051, type: 3}
+  m_Name: Q 1
+  m_EditorClassIdentifier: 
+  questionTitle: Q1
+  contextText: "\u5FAE\u98A8\u5439\u62C2\u6A39\u5F71\u6416\u66F3\uFF0C\u6697\u9999\u6D6E\u52D5\uFF0C\u5BAE\u5973\u5011\u4F4E\u8072\u7ACA\u7ACA\u79C1\u8A9E\uFF0C\n\u9326\u888D\u8F15\u64E6\u5730\u9762\uFF0C\u5FC3\u8DF3\u96A8\u6B65\u4F10\u6025\u4FC3\uFF0C\u8F03\u52C1\u7684\u5473\u9053\u5DF2\u7136\u8822\u8822\u6B32\u52D5"
+  questionText: "\u5BAE\u5EF7\u6D3E\u7CFB\u9B25\u722D\u5F9E\u53E4\u81F3\u4ECA\u59CB\u7D42\u8F2A\u8FF4\uFF0C\n\u60A8\u6703\u600E\u9EBC\u9078\u64C7\u7ACB\u5834\uFF1F"
+  optionCircle: "\u662F"
+  optionCross: "\u5426"
+  circleDescription: "\u6311\u6230\u5C40\u52E2\uFF0C\u5805\u5B88\u4FE1\u5FF5\uFF0C\n\u5F9E\u4E2D\u7372\u5F97\u6700\u5927\u7684\u5229\u76CA\u8207\u6B0A\u529B"
+  crossDescription: "\u4FDD\u6301\u4E2D\u7ACB\uFF0C\u89C0\u5BDF\u5C40\u52E2\uFF0C\n\u907F\u514D\u6372\u5165\u904E\u591A\u7684\u722D\u9B25"
+  circleWeights: []
+  crossWeights: []
+  isCutcene: 0
+  isRecord: 1
+  enabled: 1

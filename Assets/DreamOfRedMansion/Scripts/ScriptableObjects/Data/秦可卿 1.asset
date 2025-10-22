@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 465c5c77649d16c4283fd556ee0ef198, type: 3}
+  m_Name: "\u79E6\u53EF\u537F 1"
+  m_EditorClassIdentifier: 
+  answerPattern: 0001
+  characterName: "\u79E6\u53EF\u537F"
+  title: "\u5145\u6EFF\u795E\u79D8\u7684\u7F8E\u9E97\u5973\u5B50\r"
+  Introduction: "\u5167\u5411\u3001\u654F\u611F\uFF0C\u5E38\u5E38\u6C89\u6D78\u65BC\u5167\u5FC3\u7684\u4E16\u754C\u4E2D\uFF0C\u5C0D\u4EBA\u751F\u6709\u8457\u60B2\u5929\u61AB\u4EBA\u7684\u601D\u8003\uFF0C\u4E26\u4E14\u7E3D\u662F\u70BA\u4ED6\u4EBA\u8457\u60F3\u3002\r\r"
+  description: "\u79E6\u53EF\u537F\u7684\u6027\u683C\u548C\u5E73\u53EF\u9760\uFF0C\u5FC3\u667A\u6DF1\u8B00\u9060\u616E\u3001\u5B88\u6210\u6CD5\u7956\u3002\r\n\u79E6\u6C0F\u6DF1\u53D7\u8CC8\u5BB6\u4E0A\u4E0B\u559C\u611B\u3002\u8CC8\u6BCD\u8A8D\u70BA\u79E6\u6C0F\u300C\u662F\u500B\u6975\u59A5\u7576\u7684\u4EBA\uFF0C\u751F\u7684\u88CA\u5A1C\u7E96\u5DE7\uFF0C\u884C\u4E8B\u53C8\u6EAB\u67D4\u548C\u5E73\uFF0C\u4E43\u91CD\u5B6B\u5AB3\u4E2D\u7B2C\u4E00\u500B\u5F97\u610F\u4E4B\u4EBA\u300D\u3002\r\n\r\n\r\n\u98A8\u6D41\u5B1D\u5A1C
+    \u6A38\u6714\u8FF7\u96E2\r\n\u4E7E\u9686\uFF1A\u610F\u5728\u9EDE\u793A\u300C\u6C34\u6EFF\u5247\u6EA2
+    \u6708\u76C8\u5247\u8667\u300D\r"
+  resultImage: {fileID: 21300000, guid: 16f2502cd2b4c0b4db9e102eb45fe7fc, type: 3}

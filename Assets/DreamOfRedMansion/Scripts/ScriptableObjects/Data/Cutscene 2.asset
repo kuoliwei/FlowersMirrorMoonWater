@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f732898a90c5e647815154a764aa051, type: 3}
+  m_Name: Cutscene 2
+  m_EditorClassIdentifier: 
+  questionTitle: Cutscene2
+  contextText: "\u6575\u5C0D\u7684\u6D3E\u7CFB\u634F\u9020\u4E8B\u5BE6\u4F86\u8AA3\u9677\u60A8\uFF0C\u5E73\u65E5\u6DF1\u5F97\u7687\u4E0A\u4FE1\u8CF4\u7684\u60A8\uFF0C\u5728\u9019\u6B21\u4E8B\u4EF6\u4E2D\u537B\u7121\u6CD5\u81EA\u8B49\u6E05\u767D\uFF0C\u807D\u4FE1\u5C0F\u4EBA\u8B92\u8A00\u7684\u7687\u4E0A\u5373\u5C07\u8981\u5224\u4E0B\u91CD\u5211"
+  questionText: 
+  optionCircle: "\u662F"
+  optionCross: "\u5426"
+  circleDescription: 
+  crossDescription: 
+  circleWeights: []
+  crossWeights: []
+  isCutcene: 1
+  isRecord: 0
+  enabled: 1
