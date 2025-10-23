@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class SimpleHoleController : MonoBehaviour
+/// <summary>
+/// 多洞版本控制器：可同時顯示多個圓洞
+/// 接收 SkeletonDataProcessor 的 hitList (List<Vector2>)。
+/// </summary>
+public class MultiHoleController : MonoBehaviour
 {
     [Header("Shader 材質")]
     [SerializeField] private Material mat;
@@ -36,16 +39,12 @@ public class SimpleHoleController : MonoBehaviour
     [Range(0.0f, 1.0f)]
     [SerializeField] private float holeCenterY; // 圓洞中心位置 Y軸（滑桿控制）
 
-    //[Header("震幅控制")]
-    //[Range(0.0f, 1.0f)]
-    //[SerializeField] private float amplitude = 0.4f;   // 振幅
-    //[Range(0.0f, 5.0f)]
-    //[SerializeField] private float frequency = 1.5f;   // 頻率（每秒循環次數）
-    //[Range(0.0f, 6.28318f)]
-    //[SerializeField] private float phase = 0f;         // 相位偏移（例如加 π/2 會讓波從頂點開始）
-    
+    [SerializeField] private List<float> holeCenterList; // 圓洞中心位置 Y軸（滑桿控制）
+
     [Header("半徑變化因子")]
     private float radiusFactor;
+    [Header("半徑變化因子列表")]
+    private float radiusFactorList;
 
     [Header("半徑變化因子變化速度")]
     [Range(0.1f, 1.0f)]
@@ -70,48 +69,24 @@ public class SimpleHoleController : MonoBehaviour
     [SerializeField] private RenderTexture maskB; // 上一幀暫存
     private bool initialized = false;
 
-    private bool isDataContinued;
-
-    [SerializeField] private float dataContinueIntervalThreshold = 0.2f;
-    private float dataContinueInterval = 0;
     void Start()
     {
         InitializeRenderTextures_AB(); // 確保建立 RenderTexture
-        //SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
+        SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
         //baseRadius = radius;
     }
 
     void Update()
     {
-        //if (Input.GetMouseButton(0))
-        //{
-        //    radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-
-        //}
-
-        //if (!Input.GetMouseButton(0))
-        //{
-        //    radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-        //}
-
-        if (isDataContinued)
+        if (Input.GetMouseButton(0))
         {
             radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
+
         }
 
-        if (!isDataContinued)
+        if (!Input.GetMouseButton(0))
         {
             radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-        }
-
-        if(dataContinueInterval > dataContinueIntervalThreshold)
-        {
-            isDataContinued = false;
-            dataContinueInterval = 0;
-        }
-        else
-        {
-            dataContinueInterval += Time.deltaTime;
         }
 
         //Graphics.Blit(null, renderTexture_PreMask, mat);
@@ -127,12 +102,6 @@ public class SimpleHoleController : MonoBehaviour
         maskB = temp;
 
         SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
-    }
-    public void SetHolePosition(Vector2 holeCenter)
-    {
-        holeCenterX = holeCenter.x;
-        holeCenterY = holeCenter.y;
-        isDataContinued = true;
     }
     // 初始化雙 RenderTexture
     private void InitializeRenderTextures_AB()
@@ -163,13 +132,16 @@ public class SimpleHoleController : MonoBehaviour
 
         initialized = true;
     }
-        public void SetMatParameter(float radius)
+    public void HandleHoleData(Vector2[] holeCenters)
+    {
+
+    }
+    public void SetMatParameter(float radius)
     {
         //// 更新圓洞中心位置（滑鼠位置轉換為 UV）
-        //Vector3 mousePos = Input.mousePosition;
-        //Vector2 uv = new Vector2(mousePos.x / Screen.width, mousePos.y / Screen.height);
-        //mat.SetVector("_HoleCenter", new Vector4(uv.x, uv.y, 0, 0));
-        mat.SetVector("_HoleCenter", new Vector4(holeCenterX, holeCenterY, 0, 0));
+        Vector3 mousePos = Input.mousePosition;
+        Vector2 uv = new Vector2(mousePos.x / Screen.width, mousePos.y / Screen.height);
+        mat.SetVector("_HoleCenter", new Vector4(uv.x, uv.y, 0, 0));
         float ampMul = Mathf.Clamp01(Mathf.InverseLerp(0.0f, maxRadius, radius));
 
         List<float> finalAmps = new List<float>();

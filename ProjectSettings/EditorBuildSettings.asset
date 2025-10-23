@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/FlowersMirrorMoonWater.unity
+    guid: 075eb14319d06484c8f97cee7b211c4e
+  - enabled: 0
+    path: Assets/DreamOfRedMansion/Scenes/DreamOfRedMansionServer.unity
+    guid: 3bbf782d8925168429d01bd66f1b9e26
   m_configObjects: {}

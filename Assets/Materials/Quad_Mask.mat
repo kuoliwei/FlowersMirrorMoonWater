@@ -91,7 +91,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HoleRadius: 2.0362093e-22
+    - _HoleCount: 0
+    - _HoleRadii: 0.1
+    - _HoleRadius: 0.22796789
     - _Irregularity: 0.1
     - _MaskBlend: 0.00744
     - _Metallic: 0
@@ -113,6 +115,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HandPos: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _HoleCenter: {r: 1.5588624, g: 1.111699, b: 0, a: 0}
+    - _HoleCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _HoleCenters: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
