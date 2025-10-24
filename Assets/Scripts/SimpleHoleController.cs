@@ -27,6 +27,8 @@ public class SimpleHoleController : MonoBehaviour
     [SerializeField] private float maxRadius;    // 洞的半徑最大值 (滑桿控制）
     [SerializeField] private float currentRadius;     // 當前洞的半徑大小
 
+    [SerializeField] private float[] currentRadiuses;     // 當前洞的半徑大小
+
 
     [Range(0.0f, 10.0f)]
     [SerializeField] private float radiusSpeed; // 自動脈動速度（滑桿控制）
@@ -36,6 +38,8 @@ public class SimpleHoleController : MonoBehaviour
     [Range(0.0f, 1.0f)]
     [SerializeField] private float holeCenterY; // 圓洞中心位置 Y軸（滑桿控制）
 
+    [SerializeField] private Vector2[] holeCenters; // 圓洞中心位置 Y軸（滑桿控制）
+
     //[Header("震幅控制")]
     //[Range(0.0f, 1.0f)]
     //[SerializeField] private float amplitude = 0.4f;   // 振幅
@@ -43,9 +47,11 @@ public class SimpleHoleController : MonoBehaviour
     //[SerializeField] private float frequency = 1.5f;   // 頻率（每秒循環次數）
     //[Range(0.0f, 6.28318f)]
     //[SerializeField] private float phase = 0f;         // 相位偏移（例如加 π/2 會讓波從頂點開始）
-    
+
     [Header("半徑變化因子")]
     private float radiusFactor;
+
+    private float[] radiusFactors;
 
     [Header("半徑變化因子變化速度")]
     [Range(0.1f, 1.0f)]
@@ -77,42 +83,54 @@ public class SimpleHoleController : MonoBehaviour
     void Start()
     {
         InitializeRenderTextures_AB(); // 確保建立 RenderTexture
+        currentRadiuses = new float[holeCenters.Length];
+        radiusFactors = new float[holeCenters.Length];
         //SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
         //baseRadius = radius;
+
     }
 
     void Update()
     {
-        //if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
+        {
+            radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
+            for (int i = 0; i < radiusFactors.Length; i++)
+            {
+                radiusFactors[i] = Mathf.Clamp01(radiusFactors[i] + Mathf.Lerp(1.0f, 0.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime);
+                currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
+            }
+        }
+
+        if (!Input.GetMouseButton(0))
+        {
+            radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
+            for (int i = 0; i < radiusFactors.Length; i++)
+            {
+                radiusFactors[i] = Mathf.Clamp01(radiusFactors[i] - Mathf.Lerp(0.0f, 5.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime);
+                currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
+            }
+        }
+
+        //if (isDataContinued)
         //{
         //    radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-
         //}
 
-        //if (!Input.GetMouseButton(0))
+        //if (!isDataContinued)
         //{
         //    radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
         //}
 
-        if (isDataContinued)
-        {
-            radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-        }
-
-        if (!isDataContinued)
-        {
-            radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-        }
-
-        if(dataContinueInterval > dataContinueIntervalThreshold)
-        {
-            isDataContinued = false;
-            dataContinueInterval = 0;
-        }
-        else
-        {
-            dataContinueInterval += Time.deltaTime;
-        }
+        //if(dataContinueInterval > dataContinueIntervalThreshold)
+        //{
+        //    isDataContinued = false;
+        //    dataContinueInterval = 0;
+        //}
+        //else
+        //{
+        //    dataContinueInterval += Time.deltaTime;
+        //}
 
         //Graphics.Blit(null, renderTexture_PreMask, mat);
         // 傳入上一幀遮罩給 Shader
@@ -126,7 +144,8 @@ public class SimpleHoleController : MonoBehaviour
         maskA = maskB;
         maskB = temp;
 
-        SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
+        //SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
+        SetMatParameter();
     }
     public void SetHolePosition(Vector2 holeCenter)
     {
@@ -163,21 +182,32 @@ public class SimpleHoleController : MonoBehaviour
 
         initialized = true;
     }
-        public void SetMatParameter(float radius)
+        public void SetMatParameter()
     {
         //// 更新圓洞中心位置（滑鼠位置轉換為 UV）
-        //Vector3 mousePos = Input.mousePosition;
-        //Vector2 uv = new Vector2(mousePos.x / Screen.width, mousePos.y / Screen.height);
+        Vector3 mousePos = Input.mousePosition;
+        Vector2 uv = new Vector2(mousePos.x / Screen.width - 0.5f, mousePos.y / Screen.height - 0.5f);
         //mat.SetVector("_HoleCenter", new Vector4(uv.x, uv.y, 0, 0));
-        mat.SetVector("_HoleCenter", new Vector4(holeCenterX, holeCenterY, 0, 0));
-        float ampMul = Mathf.Clamp01(Mathf.InverseLerp(0.0f, maxRadius, radius));
+        //mat.SetVector("_HoleCenter", new Vector4(holeCenterX, holeCenterY, 0, 0));
+        mat.SetFloat("_HoleCount", this.holeCenters.Length);
+        // 準備一個 Vector4 陣列
+        Vector4[] holeCenters = new Vector4[this.holeCenters.Length];
+        for (int i = 0; i < holeCenters.Length; i++)
+        {
+            holeCenters[i] = new Vector4(this.holeCenters[i].x + uv.x, this.holeCenters[i].y + uv.y, 0, 0);
+        }
+        // 傳給 shader
+        mat.SetVectorArray("_HoleCenters", holeCenters);
+
+        //float ampMul = Mathf.Clamp01(Mathf.InverseLerp(0.0f, maxRadius, radius));
 
         List<float> finalAmps = new List<float>();
         for (int i = 0; i < amps.Length; i++)
         {
             //float finalAmp = amps[i] * Mathf.Sin(1 * 2 * Mathf.PI * Time.time * ampVarSpeeds[i] * Mathf.Sin(ampVarSpeedFactor * 2 * Mathf.PI * Time.time * ampVarSpeedFactor));
             float finalAmp = amps[i] * Mathf.Sin(1 * 2 * Mathf.PI * Time.time * ampVarSpeeds[i]);
-            finalAmps.Add(finalAmp * radius);
+            //finalAmps.Add(finalAmp * radius);
+            finalAmps.Add(finalAmp);
         }
         currentAmps = finalAmps.ToArray();
         //List<float> finalFreqs = new List<float>();
@@ -196,15 +226,16 @@ public class SimpleHoleController : MonoBehaviour
         mat.SetFloatArray("_EdgeAmps", finalAmps);
 
         // 控制圓洞半徑
-        if (autoPulse)
-        {
-            // 使用正弦波讓半徑在 [0,1] 範圍內上下擺動
-            float t = Mathf.Sin(Time.time * radiusSpeed) * 0.5f + 0.5f;
-            radius = t;
-        }
+        //if (autoPulse)
+        //{
+        //    // 使用正弦波讓半徑在 [0,1] 範圍內上下擺動
+        //    float t = Mathf.Sin(Time.time * radiusSpeed) * 0.5f + 0.5f;
+        //    radius = t;
+        //}
 
-        mat.SetFloat("_HoleRadius", radius);
-        currentRadius = radius;
+        //mat.SetFloat("_HoleRadius", radius);
+        mat.SetFloatArray("_HoleRadii", currentRadiuses);
+        //currentRadius = radius;
     }
     private void OnDestroy()
     {

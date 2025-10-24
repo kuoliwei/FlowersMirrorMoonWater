@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Quad_Mask
-  m_Shader: {fileID: 4800000, guid: 6db9cb041bab1c54683f9971ed302774, type: 3}
+  m_Shader: {fileID: 4800000, guid: bacd144347ce00d478b278b428a47e99, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrevMaskTex:
-        m_Texture: {fileID: 8400000, guid: 9f0a115c0ae37cf439141a24ea5f0893, type: 2}
+        m_Texture: {fileID: 8400000, guid: c272297f66f82aa4582d5fb1665b3b8b, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -91,7 +91,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HoleCount: 0
+    - _HoleCount: 5
     - _HoleRadii: 0.1
     - _HoleRadius: 0.22796789
     - _Irregularity: 0.1

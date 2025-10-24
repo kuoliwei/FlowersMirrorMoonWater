@@ -3,8 +3,6 @@ Shader "Custom/SinEdgeHole_MultiHole"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _HoleCenter ("Hole Center (UV)", Vector) = (0.5, 0.5, 0, 0)
-        _HoleRadius ("Hole Radius", Float) = 0.25
         _Ratio ("Ratio (width/height)", Float) = 0
 
         _PrevMaskTex ("Previous Mask (read-only)", 2D) = "white" {}
@@ -30,11 +28,13 @@ Shader "Custom/SinEdgeHole_MultiHole"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            sampler2D _PrevMaskTex;   // ← 新增
-            float _MaskBlend;         // ← 新增
-            float4 _HoleCenter;
-            float4 _HoleCenters[32];
-            float  _HoleRadius;
+            sampler2D _PrevMaskTex;
+            float _MaskBlend;
+
+            float4 _HoleCenters[32]; // xy 為中心座標 (UV)，zw 可保留或忽略
+            float _HoleRadii[32];    // 對應每個洞的半徑
+            int _HoleCount;                 // 實際洞的數量（由 C# 傳入）
+
             float  _Ratio;
             float  _Feather;
 
@@ -75,36 +75,70 @@ Shader "Custom/SinEdgeHole_MultiHole"
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                float2 d = i.uv - _HoleCenter.xy;
-                d.x *= _Ratio;
-                float dist = length(d);
-                float ang = atan2(d.y, d.x);
+                float2 d[32];
+                float dist[32];
+                float ang[32];
 
-                float wave = 0.0;
-                [unroll]
+                for (int j = 0; j < _HoleCount; j++)
+                {
+                    d[j] = i.uv - _HoleCenters[j].xy;
+                    d[j].x *= _Ratio;
+                    dist[j] = length(d[j]);
+                    ang[j] = atan2(d[j].y, d[j].x);
+                }
+
+                float wave[32];
+
 
                 const float TAU = 6.2831853;
-
-                for (int j = 0; j < 8; j++)
+                [unroll]
+                for (int x = 0; x < _HoleCount; x++)
                 {
-                    if (j >= _EdgeCount) break;
-                    if (_EdgeFlow > 0.5)
+                    wave[x] = 0.0;
+
+                    // 每個洞的邊緣波動組合
+                    for (int k = 0; k< 8; k++)
                     {
-                        wave += _EdgeAmps[j] * sin(_EdgeFreqs[j] * TAU + _Time.y * _EdgeSpeed);
-                    }
-                    else
-                    {
-                        wave += _EdgeAmps[j] * sin(_EdgeFreqs[j] * ang);
+                        if (k >= _EdgeCount) break;
+
+                        if (_EdgeFlow > 0.5)
+                        {
+                            // 流動版本（不依角度）
+                            wave[x] += _EdgeAmps[k] * _HoleRadii[x] * sin(_EdgeFreqs[k] * TAU + _Time.y * _EdgeSpeed);
+                        }
+                        else
+                        {
+                            // 固定角度版本（使用該洞的角度 ang[xk]）
+                            wave[x] += _EdgeAmps[k] * _HoleRadii[x] * sin(_EdgeFreqs[k] * ang[x]);
+                        }
                     }
                 }
 
-                //float edgeRadius = _HoleRadius + wave * pow(mul, 2.0);
-                float edgeRadius = _HoleRadius + wave;
+                float edgeRadius[32];
 
-                float alphaMask;
+                float featherRange[32];
 
-                float featherRange = min(_Feather, edgeRadius * 0.9);
-                alphaMask = smoothstep(edgeRadius - featherRange, edgeRadius + featherRange, dist);
+                for (int a = 0; a < _HoleCount; a++)
+                {
+                    edgeRadius[a] = _HoleRadii[a] + wave[a];
+                    //edgeRadius[a] = _HoleRadii[a];
+                    featherRange[a] = edgeRadius[a] * _Feather;
+                }
+
+                float alphaMasks[32];
+                for (int j = 0; j < _HoleCount; j++)
+                {
+                    // 洞內透明，外圍不透明
+                    alphaMasks[j] = smoothstep(edgeRadius[j] - featherRange[j], edgeRadius[j], dist[j]);
+                }
+                
+
+                float alphaMaskTotal = 1.0;
+
+                for (int c = 0; c < _HoleCount; c++)
+                {
+                    alphaMaskTotal = min(alphaMaskTotal, alphaMasks[c]);
+                }
 
                 // ======================================================
                 // 新增區段：與上一幀遮罩混合，形成漸變效果
@@ -113,22 +147,13 @@ Shader "Custom/SinEdgeHole_MultiHole"
 
                 // 加定值
                 float resultAlpha = 0;
-                float diff = alphaMask - prevAlpha;
-                if(abs(diff) > _MaskBlend)
-                {
-                    resultAlpha = clamp(prevAlpha + sign(diff) * _MaskBlend, 0.0, 1.0);
-                }
-                else
-                {
-                    resultAlpha = alphaMask;
-                }
-
-                // if (_Feather <= 1e-5)
-                //     alphaMask = (dist < edgeRadius) ? 0.0 : 1.0;
-                // else
-                //     alphaMask = smoothstep(edgeRadius - _Feather, edgeRadius + _Feather, dist);
+                float diff = 0;
+                diff = alphaMaskTotal - prevAlpha;
+                //float varValue = clamp(_MaskBlend * ((1.0 + _MaskBlend) / (abs(diff) + _MaskBlend)), 0.0, abs(diff) * 0.1);
+                resultAlpha = clamp(prevAlpha + sign(diff) * _MaskBlend, 0.0, 1.0);
 
                 col.a = resultAlpha;
+                //col.a = alphaMaskTotal;
                 return col;
             }
             ENDCG
