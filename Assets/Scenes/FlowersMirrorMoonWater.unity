@@ -2324,11 +2324,77 @@ MonoBehaviour:
   - 0.11
   ampVarSpeedFactor: 1
   autoPulse: 0
-  maxRadius: 0.304
+  maxRadius: 0.3
   currentRadius: 0.02
+  currentRadiuses:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   radiusSpeed: 1.5
   holeCenterX: 0.5
   holeCenterY: 0.5
+  holeCenters:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
   radiusFactorSpeed: 0.5
   amplitude: 0.4
   frequency: 1.5
@@ -2337,7 +2403,7 @@ MonoBehaviour:
   textureHeight: 1080
   maskA: {fileID: 8400000, guid: c272297f66f82aa4582d5fb1665b3b8b, type: 2}
   maskB: {fileID: 8400000, guid: 9f0a115c0ae37cf439141a24ea5f0893, type: 2}
-  dataContinueIntervalThreshold: 0.2
+  dataContinueIntervalThreshold: 0.3
 --- !u!4 &621612887
 Transform:
   m_ObjectHideFlags: 0

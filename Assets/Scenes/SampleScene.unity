@@ -176,16 +176,9 @@ MonoBehaviour:
   autoPulse: 0
   maxRadius: 0.304
   currentRadius: 0.02
-  currentRadiuses: []
   radiusSpeed: 1.5
   holeCenterX: 0.5
   holeCenterY: 0.5
-  holeCenters:
-  - {x: 0.5, y: 0.5}
-  - {x: 0.25, y: 0.25}
-  - {x: 0.75, y: 0.25}
-  - {x: 0.25, y: 0.75}
-  - {x: 0.75, y: 0.75}
   radiusFactorSpeed: 0.5
   amplitude: 0.4
   frequency: 1.5
@@ -195,6 +188,12 @@ MonoBehaviour:
   maskA: {fileID: 8400000, guid: c272297f66f82aa4582d5fb1665b3b8b, type: 2}
   maskB: {fileID: 8400000, guid: 9f0a115c0ae37cf439141a24ea5f0893, type: 2}
   dataContinueIntervalThreshold: 0.2
+  holeCentersForTest:
+  - {x: 0.5, y: 0.5}
+  - {x: 0.25, y: 0.25}
+  - {x: 0.75, y: 0.75}
+  - {x: 0.25, y: 0.75}
+  - {x: 0.75, y: 0.25}
 --- !u!4 &621612887
 Transform:
   m_ObjectHideFlags: 0

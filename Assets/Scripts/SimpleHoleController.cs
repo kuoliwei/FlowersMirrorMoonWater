@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -22,12 +23,16 @@ public class SimpleHoleController : MonoBehaviour
 
     [SerializeField] private bool autoPulse = false;   // 是否自動脈動
 
+    [Header("圓洞數量限制")]
+    const int maxHoleCount = 32;
+    private int activeHoleCount = 0;
+
     [Header("圓洞半徑控制")]
     [Range(0.0f, 0.5f)]
     [SerializeField] private float maxRadius;    // 洞的半徑最大值 (滑桿控制）
     [SerializeField] private float currentRadius;     // 當前洞的半徑大小
 
-    [SerializeField] private float[] currentRadiuses;     // 當前洞的半徑大小
+    private float[] currentRadiuses = new float[maxHoleCount];     // 當前洞的半徑大小
 
 
     [Range(0.0f, 10.0f)]
@@ -38,7 +43,9 @@ public class SimpleHoleController : MonoBehaviour
     [Range(0.0f, 1.0f)]
     [SerializeField] private float holeCenterY; // 圓洞中心位置 Y軸（滑桿控制）
 
-    [SerializeField] private Vector2[] holeCenters; // 圓洞中心位置 Y軸（滑桿控制）
+    
+
+    private Vector2[] holeCenters = new Vector2[maxHoleCount]; // 圓洞中心位置 Y軸（滑桿控制）
 
     //[Header("震幅控制")]
     //[Range(0.0f, 1.0f)]
@@ -51,7 +58,7 @@ public class SimpleHoleController : MonoBehaviour
     [Header("半徑變化因子")]
     private float radiusFactor;
 
-    private float[] radiusFactors;
+    private float[] radiusFactors = new float[maxHoleCount];
 
     [Header("半徑變化因子變化速度")]
     [Range(0.1f, 1.0f)]
@@ -76,15 +83,21 @@ public class SimpleHoleController : MonoBehaviour
     [SerializeField] private RenderTexture maskB; // 上一幀暫存
     private bool initialized = false;
 
-    private bool isDataContinued;
 
     [SerializeField] private float dataContinueIntervalThreshold = 0.2f;
+    private bool isDataContinued = false;
+    private bool[] isDataContinueds = new bool[maxHoleCount];
     private float dataContinueInterval = 0;
+    private float[] dataContinueIntervals = new float[maxHoleCount];
+
+
+    [SerializeField] private Vector2[] holeCentersForTest;
+
     void Start()
     {
         InitializeRenderTextures_AB(); // 確保建立 RenderTexture
-        currentRadiuses = new float[holeCenters.Length];
-        radiusFactors = new float[holeCenters.Length];
+        //currentRadiuses = new float[holeCenters.Length];
+        //radiusFactors = new float[holeCenters.Length];
         //SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
         //baseRadius = radius;
 
@@ -92,25 +105,30 @@ public class SimpleHoleController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
-        {
-            radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-            for (int i = 0; i < radiusFactors.Length; i++)
-            {
-                radiusFactors[i] = Mathf.Clamp01(radiusFactors[i] + Mathf.Lerp(1.0f, 0.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime);
-                currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
-            }
-        }
 
-        if (!Input.GetMouseButton(0))
-        {
-            radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
-            for (int i = 0; i < radiusFactors.Length; i++)
-            {
-                radiusFactors[i] = Mathf.Clamp01(radiusFactors[i] - Mathf.Lerp(0.0f, 5.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime);
-                currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
-            }
-        }
+        //if (Input.GetMouseButton(0))
+        //{
+        //    UpdateHoleCenters(holeCentersForTest.ToList<Vector2>());
+        //}
+        //if (Input.GetMouseButton(0))
+        //{
+        //    radiusFactor = Mathf.Clamp01(radiusFactor + Mathf.Lerp(1.0f, 0.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
+        //    for (int i = 0; i < radiusFactors.Length; i++)
+        //    {
+        //        radiusFactors[i] = Mathf.Clamp01(radiusFactors[i] + Mathf.Lerp(1.0f, 0.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime);
+        //        currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
+        //    }
+        //}
+
+        //if (!Input.GetMouseButton(0))
+        //{
+        //    radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
+        //    for (int i = 0; i < radiusFactors.Length; i++)
+        //    {
+        //        radiusFactors[i] = Mathf.Clamp01(radiusFactors[i] - Mathf.Lerp(0.0f, 5.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime);
+        //        currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
+        //    }
+        //}
 
         //if (isDataContinued)
         //{
@@ -122,7 +140,7 @@ public class SimpleHoleController : MonoBehaviour
         //    radiusFactor = Mathf.Clamp01(radiusFactor - Mathf.Lerp(0.0f, 5.0f, radiusFactor) * radiusFactorSpeed * Time.deltaTime);
         //}
 
-        //if(dataContinueInterval > dataContinueIntervalThreshold)
+        //if (dataContinueInterval > dataContinueIntervalThreshold)
         //{
         //    isDataContinued = false;
         //    dataContinueInterval = 0;
@@ -131,21 +149,62 @@ public class SimpleHoleController : MonoBehaviour
         //{
         //    dataContinueInterval += Time.deltaTime;
         //}
+        if (activeHoleCount > 0)
+        {
+            for (int i = 0; i < activeHoleCount; i++)
+            {
+                if (isDataContinueds[i])
+                {
+                    // 擴張階段
+                    radiusFactors[i] = Mathf.Clamp01(
+                        radiusFactors[i] + Mathf.Lerp(1.0f, 0.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime
+                    );
+                }
+                else
+                {
+                    // 收縮階段
+                    radiusFactors[i] = Mathf.Clamp01(
+                        radiusFactors[i] - Mathf.Lerp(0.0f, 5.0f, radiusFactors[i]) * radiusFactorSpeed * Time.deltaTime
+                    );
+                }
 
-        //Graphics.Blit(null, renderTexture_PreMask, mat);
-        // 傳入上一幀遮罩給 Shader
-        mat.SetTexture("_PrevMaskTex", maskB);
+                // 檢查資料中斷時間
+                if (dataContinueIntervals[i] > dataContinueIntervalThreshold)
+                {
+                    isDataContinueds[i] = false;
+                    dataContinueIntervals[i] = 0;
+                }
+                else
+                {
+                    dataContinueIntervals[i] += Time.deltaTime;
+                }
+                Debug.Log($"currentRadiuses length{currentRadiuses.Length},radiusFactors length{radiusFactors.Length}");
+                currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
+            }
+            //Graphics.Blit(null, renderTexture_PreMask, mat);
+            // 傳入上一幀遮罩給 Shader
+            mat.SetTexture("_PrevMaskTex", maskB);
 
-        // 把目前的洞結果寫進 maskA
-        Graphics.Blit(null, maskA, mat);
+            // 把目前的洞結果寫進 maskA
+            Graphics.Blit(null, maskA, mat);
 
-        // 交換 maskA、maskB（Ping-Pong）
-        var temp = maskA;
-        maskA = maskB;
-        maskB = temp;
+            // 交換 maskA、maskB（Ping-Pong）
+            var temp = maskA;
+            maskA = maskB;
+            maskB = temp;
 
-        //SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
-        SetMatParameter();
+            //SetMatParameter(Mathf.Lerp(0.0f, maxRadius, radiusFactor));
+            SetMatParameter();
+        }
+    }
+    public void UpdateHoleCenters(List<Vector2> newCenters)
+    {
+        activeHoleCount = Mathf.Min(newCenters.Count, maxHoleCount);
+        for (int i = 0; i < activeHoleCount; i++)
+        {
+            holeCenters[i] = newCenters[i];
+            isDataContinueds[i] = true;
+        }
     }
     public void SetHolePosition(Vector2 holeCenter)
     {
@@ -185,16 +244,20 @@ public class SimpleHoleController : MonoBehaviour
         public void SetMatParameter()
     {
         //// 更新圓洞中心位置（滑鼠位置轉換為 UV）
-        Vector3 mousePos = Input.mousePosition;
-        Vector2 uv = new Vector2(mousePos.x / Screen.width - 0.5f, mousePos.y / Screen.height - 0.5f);
+        //Vector3 mousePos = Input.mousePosition;
+        //Vector2 uv = new Vector2(mousePos.x / Screen.width - 0.5f, mousePos.y / Screen.height - 0.5f);
         //mat.SetVector("_HoleCenter", new Vector4(uv.x, uv.y, 0, 0));
         //mat.SetVector("_HoleCenter", new Vector4(holeCenterX, holeCenterY, 0, 0));
-        mat.SetFloat("_HoleCount", this.holeCenters.Length);
+        mat.SetFloat("_HoleCount", activeHoleCount);
         // 準備一個 Vector4 陣列
         Vector4[] holeCenters = new Vector4[this.holeCenters.Length];
+        //for (int i = 0; i < holeCenters.Length; i++)
+        //{
+        //    holeCenters[i] = new Vector4(this.holeCenters[i].x + uv.x, this.holeCenters[i].y + uv.y, 0, 0);
+        //}
         for (int i = 0; i < holeCenters.Length; i++)
         {
-            holeCenters[i] = new Vector4(this.holeCenters[i].x + uv.x, this.holeCenters[i].y + uv.y, 0, 0);
+            holeCenters[i] = new Vector4(this.holeCenters[i].x, this.holeCenters[i].y, 0, 0);
         }
         // 傳給 shader
         mat.SetVectorArray("_HoleCenters", holeCenters);

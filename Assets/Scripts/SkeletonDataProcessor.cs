@@ -69,6 +69,14 @@ public class SkeletonDataProcessor : MonoBehaviour
     private readonly Dictionary<int, SkeletonVisual> visuals = new Dictionary<int, SkeletonVisual>();
     private readonly List<int> _tmpToRemove = new List<int>();
 
+    [SerializeField] private Vector2[] holeCentersForTest;
+    private void Update()
+    {
+        //if (Input.GetMouseButton(0))
+        //{
+        //    simpleHoleController.UpdateHoleCenters(holeCentersForTest.ToList<Vector2>());
+        //}
+    }
     /// <summary>
     /// 接收一幀骨架資料：更新/建立/刪除可視化，並可選擇列印資訊。
     /// </summary>
@@ -185,8 +193,14 @@ public class SkeletonDataProcessor : MonoBehaviour
                         int hits = TryGetWristUVs(vis.joints[(int)JointId.LeftWrist], uvResults, quadResults);
                         for (int i = 0; i < hits; i++)
                         {
-                            var uv = leftHandSmoother.Smooth(uvResults[i]);
-                            hitList.Add(ConvertToFullUV(uv, quadResults[i]));
+                            var quad = quadResults[i];
+                            // 只接受 left / right，其他全部略過
+                            if (!TryConvertToFullUV(uvResults[i], quad, out var fullUV))
+                                continue;
+
+                            var uv = leftHandSmoother.Smooth(fullUV);
+                            hitList.Add(uv);
+                            //hitList.Add(ConvertToFullUV(uv, quadResults[i]));
                         }
                         //if (TryGetWristUV(vis.joints[(int)JointId.LeftWrist], out var uvL, out var quadL))
                         //{
@@ -202,8 +216,14 @@ public class SkeletonDataProcessor : MonoBehaviour
                         int hits = TryGetWristUVs(vis.joints[(int)JointId.RightWrist], uvResults, quadResults);
                         for (int i = 0; i < hits; i++)
                         {
-                            var uv = rightHandSmoother.Smooth(uvResults[i]);
-                            hitList.Add(ConvertToFullUV(uv, quadResults[i]));
+                            var quad = quadResults[i];
+                            // 只接受 left / right，其他全部略過
+                            if (!TryConvertToFullUV(uvResults[i], quad, out var fullUV))
+                                continue;
+
+                            var uv = leftHandSmoother.Smooth(fullUV);
+                            hitList.Add(uv);
+                            //hitList.Add(ConvertToFullUV(uv, quadResults[i]));
                         }
                         //if (TryGetWristUV(vis.joints[(int)JointId.RightWrist], out var uvR, out var quadR))
                         //{
@@ -224,7 +244,8 @@ public class SkeletonDataProcessor : MonoBehaviour
         if (hitList.Count > 0)
         {
             //holeController.HandleHoleData(hitList.ToArray());
-            simpleHoleController.SetHolePosition(hitList[0]);
+            //simpleHoleController.SetHolePosition(hitList[0]);
+            simpleHoleController.UpdateHoleCenters(hitList);
             StringBuilder sb = new StringBuilder("[HitList] ");
             foreach (var uv in hitList)
                 sb.Append($"({uv.x:F3},{uv.y:F3}) ");
@@ -387,6 +408,21 @@ public class SkeletonDataProcessor : MonoBehaviour
                 return new Vector2(0.5f + uv.x * 0.5f, uv.y);
             default:
                 return uv;
+        }
+    }
+    private bool TryConvertToFullUV(Vector2 uv, QuadType quad, out Vector2 fullUV)
+    {
+        switch (quad)
+        {
+            case QuadType.left:
+                fullUV = new Vector2(uv.x * 0.5f, uv.y);
+                return true;
+            case QuadType.right:
+                fullUV = new Vector2(0.5f + uv.x * 0.5f, uv.y);
+                return true;
+            default:
+                fullUV = default;
+                return false;
         }
     }
 }
