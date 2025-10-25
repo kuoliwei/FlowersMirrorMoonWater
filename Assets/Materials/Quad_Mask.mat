@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 8c52765ba50e90f409b4609a241e026c, type: 3}
+        m_Texture: {fileID: 2800000, guid: ef037a333c273bf408e9289a518e650f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrevMaskTex:
-        m_Texture: {fileID: 8400000, guid: c272297f66f82aa4582d5fb1665b3b8b, type: 2}
+        m_Texture: {fileID: 8400000, guid: 9f0a115c0ae37cf439141a24ea5f0893, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -91,7 +91,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HoleCount: 5
+    - _HoleCount: 1
     - _HoleRadii: 0.1
     - _HoleRadius: 0.22796789
     - _Irregularity: 0.1
