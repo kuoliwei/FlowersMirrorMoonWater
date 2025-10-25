@@ -8,9 +8,20 @@ namespace MirrorWater
         [Header("Panel Controllers")]
         [SerializeField] private VideoPanelController videoPanel;
         [SerializeField] private InteractivePanelController interactivePanel;
+        [SerializeField] private InteractiveSequenceController interactiveController;
+        private GameState currentState;
 
+        public void ChangeState(GameState newState)
+        {
+            currentState = newState;
+
+            // 通知 InteractiveSequenceController
+            if (interactiveController != null)
+                interactiveController.OnGameStateChanged(newState);
+        }
         private GameStateMachine stateMachine;
         private bool isTransitioning = false; // 轉場鎖，避免重複切換
+        public bool IsTransitioning => isTransitioning;
 
         public bool IsVideoFinished { get; private set; }
         public bool IsInteractionFinished { get; private set; }

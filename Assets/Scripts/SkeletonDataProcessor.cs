@@ -72,10 +72,10 @@ public class SkeletonDataProcessor : MonoBehaviour
     [SerializeField] private Vector2[] holeCentersForTest;
     private void Update()
     {
-        //if (Input.GetMouseButton(0))
-        //{
-        //    simpleHoleController.UpdateHoleCenters(holeCentersForTest.ToList<Vector2>());
-        //}
+        if (Input.GetMouseButton(0))
+        {
+            simpleHoleController.UpdateHoleCenters(holeCentersForTest.ToList<Vector2>());
+        }
     }
     /// <summary>
     /// 接收一幀骨架資料：更新/建立/刪除可視化，並可選擇列印資訊。

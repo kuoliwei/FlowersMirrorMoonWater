@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21905006a63e6374cbb754fcd4058f8c, type: 3}
+  m_Name: skeleton1-2
+  m_EditorClassIdentifier: 
+  key: skeleton1-2
+  bgSprite: {fileID: 21300000, guid: 597972d3860b2a3408d2e7ba1b39c0a8, type: 3}
+  displayDuration: 5

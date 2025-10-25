@@ -178,7 +178,7 @@ public class SimpleHoleController : MonoBehaviour
                 {
                     dataContinueIntervals[i] += Time.deltaTime;
                 }
-                Debug.Log($"currentRadiuses length{currentRadiuses.Length},radiusFactors length{radiusFactors.Length}");
+                //Debug.Log($"currentRadiuses length{currentRadiuses.Length},radiusFactors length{radiusFactors.Length}");
                 currentRadiuses[i] = Mathf.Lerp(0.0f, maxRadius, radiusFactors[i]);
             }
             //Graphics.Blit(null, renderTexture_PreMask, mat);

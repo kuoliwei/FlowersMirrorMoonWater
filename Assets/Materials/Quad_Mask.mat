@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: ef037a333c273bf408e9289a518e650f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 705e2b909aefe1e4180da243019c5165, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -91,7 +91,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HoleCount: 1
+    - _HoleCount: 5
     - _HoleRadii: 0.1
     - _HoleRadius: 0.22796789
     - _Irregularity: 0.1

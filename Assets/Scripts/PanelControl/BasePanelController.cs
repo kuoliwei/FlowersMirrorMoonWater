@@ -52,7 +52,6 @@ namespace MirrorWater
             canvasGroup.alpha = end;
             canvasGroup.interactable = show;
             canvasGroup.blocksRaycasts = show;
-
             OnFadeComplete(show);
         }
 
