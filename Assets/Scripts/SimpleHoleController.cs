@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SimpleHoleController : MonoBehaviour
 {
@@ -102,13 +103,21 @@ public class SimpleHoleController : MonoBehaviour
         //baseRadius = radius;
 
     }
-
+    [SerializeField] private Text mouseUV;
     void Update()
     {
-
         //if (Input.GetMouseButton(0))
         //{
-        //    UpdateHoleCenters(holeCentersForTest.ToList<Vector2>());
+        //    // 更新圓洞中心位置（滑鼠位置轉換為 UV）
+        //    Vector3 mousePos = Input.mousePosition;
+        //    Vector2 uvOffset = new Vector2(mousePos.x / Screen.width - 0.5f, mousePos.y / Screen.height - 0.5f);
+        //    //mouseUV.text = $"X:{uvOffset.x:F2},Y:{uvOffset.y:F2}";
+        //    Vector2[] finalHoleCentersForTest = new Vector2[holeCentersForTest.Length];
+        //    for (int i = 0; i < holeCentersForTest.Length; i++)
+        //    {
+        //        finalHoleCentersForTest[i] = holeCentersForTest[i] + uvOffset;
+        //    }
+        //    UpdateHoleCenters(finalHoleCentersForTest.ToList<Vector2>());
         //}
         //if (Input.GetMouseButton(0))
         //{

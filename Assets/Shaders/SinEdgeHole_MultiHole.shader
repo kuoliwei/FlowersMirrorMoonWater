@@ -126,33 +126,50 @@ Shader "Custom/SinEdgeHole_MultiHole"
                 }
 
                 float alphaMasks[32];
+                float whiteMask[32];
                 for (int j = 0; j < _HoleCount; j++)
                 {
                     // 洞內透明，外圍不透明
                     alphaMasks[j] = smoothstep(edgeRadius[j] - featherRange[j], edgeRadius[j], dist[j]);
+                    // 白色邊界（在 feather 範圍內從白漸淡）
+
+                    float inner = step(edgeRadius[j] - featherRange[j], dist[j]); // 1 when inside or beyond inner edge
+                    float outer = step(dist[j], edgeRadius[j]);                    // 1 when before outer edge
+                    whiteMask[j] = inner * outer; // 只在邊緣範圍內為1，其他為0
                 }
                 
 
                 float alphaMaskTotal = 1.0;
+                float whiteMaskTotal = 0.0;
 
                 for (int c = 0; c < _HoleCount; c++)
                 {
+                    // 多個洞之間的透明度取最小值（任一洞都能挖透）
                     alphaMaskTotal = min(alphaMaskTotal, alphaMasks[c]);
+
+                    // 多個洞的白邊取最大值（所有白邊都可見）
+                    whiteMaskTotal = max(whiteMaskTotal, whiteMask[c]);
                 }
 
                 // ======================================================
                 // 新增區段：與上一幀遮罩混合，形成漸變效果
                 // ======================================================
                 float prevAlpha = tex2D(_PrevMaskTex, i.uv).a;                 // 取樣上一幀透明度
-
                 // 加定值
-                float resultAlpha = 0;
-                float diff = 0;
-                diff = alphaMaskTotal - prevAlpha;
-                //float varValue = clamp(_MaskBlend * ((1.0 + _MaskBlend) / (abs(diff) + _MaskBlend)), 0.0, abs(diff) * 0.1);
-                resultAlpha = clamp(prevAlpha + sign(diff) * _MaskBlend, 0.0, 1.0);
+                float resultAlpha = 0.0;
+                float diffAlpha = 0.0;
+                diffAlpha = alphaMaskTotal - prevAlpha;
+                resultAlpha = clamp(prevAlpha + sign(diffAlpha) * _MaskBlend, 0.0, 1.0);
 
+                //float4 col = tex2D(_MainTex, i.uv);
+
+                // 如果有白邊，就讓整個顏色直接變白
+                if (whiteMaskTotal > 0.0)
+                {
+                    col.rgb = float3(1.0, 1.0, 1.0);
+                }
                 col.a = resultAlpha;
+
                 //col.a = alphaMaskTotal;
                 return col;
             }

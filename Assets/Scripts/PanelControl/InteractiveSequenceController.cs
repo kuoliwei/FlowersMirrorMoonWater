@@ -36,7 +36,7 @@ namespace MirrorWater
         [SerializeField] private List<SkeletonGroup> skeletonGroups;
 
         [Header("淡入淡出速度（僅用於 Mask）")]
-        [SerializeField] private CanvasGroup maskCanvasGroup;
+        //[SerializeField] private CanvasGroup maskCanvasGroup;
         [SerializeField] private float fadeDuration = 1f;
 
         private Dictionary<string, CanvasGroup> groupMap = new Dictionary<string, CanvasGroup>();
@@ -157,7 +157,8 @@ namespace MirrorWater
                     // -------------------
                     //   Fade-In
                     // -------------------
-                    yield return StartCoroutine(FadeMask(1f));
+                    //yield return StartCoroutine(FadeMask_RawImage(1f));
+                    yield return null;
 
                     if (bgImage != null)
                     {
@@ -182,33 +183,59 @@ namespace MirrorWater
 
                     group.alpha = 0f;
 
-                    yield return StartCoroutine(FadeMask(0f));
+                    yield return null;
+                    //yield return StartCoroutine(FadeMask_RawImage(0f));
                 }
             }
 
             Debug.Log("[InteractiveSequenceController] 結束無限循環輪播");
         }
 
-        private IEnumerator FadeMask(float targetAlpha)
+        //// CanvasGroup 控制整體透明度
+        //private IEnumerator FadeMask_CanvasGroup(float targetAlpha)
+        //{
+        //    if (maskCanvasGroup == null)
+        //        yield break;
+
+        //    float startAlpha = maskCanvasGroup.alpha;
+        //    float timer = 0f;
+
+        //    while (timer < fadeDuration)
+        //    {
+        //        float t = Mathf.Clamp01(timer / fadeDuration);
+        //        maskCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+
+        //        timer += Time.deltaTime;
+        //        yield return null;
+        //    }
+
+        //    // 確保最後一幀精準設定
+        //    maskCanvasGroup.alpha = targetAlpha;
+        //}
+        // RawImage 控制單張圖片透明度
+        private IEnumerator FadeMask_RawImage(float targetAlpha)
         {
-            if (maskCanvasGroup == null)
+            if (maskImage == null)
                 yield break;
 
-            float startAlpha = maskCanvasGroup.alpha;
+            Color startColor = maskImage.color;
+            float startAlpha = startColor.a;
             float timer = 0f;
 
             while (timer < fadeDuration)
             {
                 float t = Mathf.Clamp01(timer / fadeDuration);
-                maskCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+                float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+                maskImage.color = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
 
                 timer += Time.deltaTime;
                 yield return null;
             }
 
             // 確保最後一幀精準設定
-            maskCanvasGroup.alpha = targetAlpha;
+            Color finalColor = maskImage.color;
+            finalColor.a = targetAlpha;
+            maskImage.color = finalColor;
         }
-
     }
 }

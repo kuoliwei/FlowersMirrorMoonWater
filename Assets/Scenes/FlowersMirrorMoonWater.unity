@@ -878,8 +878,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 2000, y: 8000}
-  m_SizeDelta: {x: 3840, y: 3840}
+  m_AnchoredPosition: {x: -20, y: 20}
+  m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &250867565
 GameObject:
@@ -1441,7 +1441,7 @@ Camera:
   m_GameObject: {fileID: 308249944}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1464,10 +1464,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 100
+  far clip plane: 2
   field of view: 60
   orthographic: 1
-  orthographic size: 1200
+  orthographic size: 1.2
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1492,7 +1492,7 @@ Transform:
   m_GameObject: {fileID: 308249944}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1920, y: 0, z: -50}
+  m_LocalPosition: {x: -1.92, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1944,55 +1944,6 @@ Transform:
   - {fileID: 953738113}
   m_Father: {fileID: 1117804458}
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
---- !u!1 &466795363
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 466795364}
-  - component: {fileID: 466795365}
-  m_Layer: 5
-  m_Name: Mask
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &466795364
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466795363}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1555177764}
-  m_Father: {fileID: 1009178736}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &466795365
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466795363}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &470894943
 GameObject:
   m_ObjectHideFlags: 0
@@ -2704,7 +2655,13 @@ MonoBehaviour:
   maskA: {fileID: 8400000, guid: c272297f66f82aa4582d5fb1665b3b8b, type: 2}
   maskB: {fileID: 8400000, guid: 9f0a115c0ae37cf439141a24ea5f0893, type: 2}
   dataContinueIntervalThreshold: 0.3
-  holeCentersForTest: []
+  holeCentersForTest:
+  - {x: 0.5, y: 0.5}
+  - {x: 0.25, y: 0.25}
+  - {x: 0.75, y: 0.75}
+  - {x: 0.25, y: 0.75}
+  - {x: 0.75, y: 0.25}
+  mouseUV: {fileID: 0}
 --- !u!4 &621612887
 Transform:
   m_ObjectHideFlags: 0
@@ -4006,7 +3963,6 @@ MonoBehaviour:
     canvasGroup: {fileID: 1898558726}
   - key: skeleton4
     canvasGroup: {fileID: 1202345680}
-  maskCanvasGroup: {fileID: 466795365}
   fadeDuration: 1
 --- !u!1 &1008007390
 GameObject:
@@ -4122,7 +4078,7 @@ RectTransform:
   - {fileID: 661563217}
   - {fileID: 1898558724}
   - {fileID: 1202345678}
-  - {fileID: 466795364}
+  - {fileID: 1555177764}
   m_Father: {fileID: 1100549891}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4578,8 +4534,8 @@ Camera:
   m_GameObject: {fileID: 1064572835}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -4601,7 +4557,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 10
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -4629,7 +4585,7 @@ Transform:
   m_GameObject: {fileID: 1064572835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.3, z: -5.6}
+  m_LocalPosition: {x: 0, y: -0.4, z: -5.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4737,8 +4693,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -10000, y: 6000}
-  m_SizeDelta: {x: 7680, y: 2400}
+  m_AnchoredPosition: {x: -40, y: 20}
+  m_SizeDelta: {x: 7.68, y: 2.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1116449461
 GameObject:
@@ -5627,7 +5583,7 @@ MonoBehaviour:
   fadeDuration: 1
   flowController: {fileID: 1750416024}
   sequenceController: {fileID: 991639044}
-  autoReturnDelay: 33
+  autoReturnDelay: 300
 --- !u!1 &1451706873
 GameObject:
   m_ObjectHideFlags: 0
@@ -6089,7 +6045,7 @@ GameObject:
   - component: {fileID: 1555177766}
   - component: {fileID: 1555177767}
   m_Layer: 5
-  m_Name: RawImage
+  m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6107,7 +6063,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 466795364}
+  m_Father: {fileID: 1009178736}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -7665,7 +7621,7 @@ Camera:
   m_GameObject: {fileID: 1909967449}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -7688,10 +7644,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 100
+  far clip plane: 2
   field of view: 60
   orthographic: 1
-  orthographic size: 1200
+  orthographic size: 1.2
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -7716,7 +7672,7 @@ Transform:
   m_GameObject: {fileID: 1909967449}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1920, y: 0, z: -50}
+  m_LocalPosition: {x: 1.92, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7972,10 +7928,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 100
+  far clip plane: 2
   field of view: 60
   orthographic: 1
-  orthographic size: 1920
+  orthographic size: 2.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -8000,7 +7956,7 @@ Transform:
   m_GameObject: {fileID: 1957055509}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -50}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

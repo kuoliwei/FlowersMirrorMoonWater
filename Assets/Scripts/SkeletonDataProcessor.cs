@@ -74,7 +74,15 @@ public class SkeletonDataProcessor : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            simpleHoleController.UpdateHoleCenters(holeCentersForTest.ToList<Vector2>());
+            // 更新圓洞中心位置（滑鼠位置轉換為 UV）
+            Vector3 mousePos = Input.mousePosition;
+            Vector2 uvOffset = new Vector2(mousePos.x / Screen.width - 0.5f, mousePos.y / Screen.height - 0.5f);
+            Vector2[] finalHoleCentersForTest = new Vector2[holeCentersForTest.Length];
+            for (int i = 0; i < holeCentersForTest.Length; i++)
+            {
+                finalHoleCentersForTest[i] = holeCentersForTest[i] + uvOffset;
+            }
+            simpleHoleController.UpdateHoleCenters(finalHoleCentersForTest.ToList<Vector2>());
         }
     }
     /// <summary>
