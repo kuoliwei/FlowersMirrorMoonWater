@@ -125,19 +125,53 @@ Shader "Custom/SinEdgeHole_MultiHole"
                     featherRange[a] = edgeRadius[a] * _Feather;
                 }
 
+                // float alphaMasks[32];
+                // float whiteMask[32];
+                // for (int j = 0; j < _HoleCount; j++)
+                // {
+                //     // 洞內透明，外圍不透明
+                //     alphaMasks[j] = smoothstep(edgeRadius[j] - featherRange[j], edgeRadius[j], dist[j]);
+
+                //     // 白色邊界（在 feather 範圍內從白漸淡）
+
+                //     float inner = step(edgeRadius[j] - featherRange[j], dist[j]); // 1 when inside or beyond inner edge
+                //     float outer = step(dist[j], edgeRadius[j]);                    // 1 when before outer edge
+                //     whiteMask[j] = inner * outer; // 只在邊緣範圍內為1，其他為0
+                // }
+
                 float alphaMasks[32];
                 float whiteMask[32];
                 for (int j = 0; j < _HoleCount; j++)
                 {
-                    // 洞內透明，外圍不透明
-                    alphaMasks[j] = smoothstep(edgeRadius[j] - featherRange[j], edgeRadius[j], dist[j]);
-                    // 白色邊界（在 feather 範圍內從白漸淡）
+                    // 外、內區域定義
+                    float outerBand = edgeRadius[j] + featherRange[j] * 0.5;
+                    float innerBand = edgeRadius[j] - featherRange[j] * 0.5;
 
-                    float inner = step(edgeRadius[j] - featherRange[j], dist[j]); // 1 when inside or beyond inner edge
-                    float outer = step(dist[j], edgeRadius[j]);                    // 1 when before outer edge
-                    whiteMask[j] = inner * outer; // 只在邊緣範圍內為1，其他為0
+                    // 內圈：外圈→中間 (0 → 1)
+                    float rise = smoothstep(edgeRadius[j], innerBand, dist[j]);
+
+                    // 中間→內圈 (1 → 0)
+                    float fall = 1.0 - smoothstep(innerBand, edgeRadius[j] - featherRange[j], dist[j]);
+
+                    // 山形結構（外圈→中間→內圈）
+                    float core = rise * fall;
+
+                    // 讓中間峰值是 0.5，而不是 1
+                    core *= 0.3;
+
+                    // 外圈以外增加淡入（edgeRadius → edgeRadius + featherRange/2）
+                    float outerFade = smoothstep(edgeRadius[j], outerBand, dist[j]);
+
+                    // 結合：內部半峰值 + 外淡入
+                    alphaMasks[j] = max(core, outerFade);
+
+                    // 白色邊界保持原樣
+                    float inner = step(edgeRadius[j] - featherRange[j], dist[j]);
+                    float outer = step(dist[j], edgeRadius[j]);
+                    whiteMask[j] = inner * outer;
                 }
-                
+
+
 
                 float alphaMaskTotal = 1.0;
                 float whiteMaskTotal = 0.0;
@@ -168,9 +202,9 @@ Shader "Custom/SinEdgeHole_MultiHole"
                 {
                     col.rgb = float3(1.0, 1.0, 1.0);
                 }
-                col.a = resultAlpha;
+                //col.a = resultAlpha;
 
-                //col.a = alphaMaskTotal;
+                col.a = alphaMaskTotal;
                 return col;
             }
             ENDCG

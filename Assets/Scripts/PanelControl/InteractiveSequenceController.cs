@@ -28,6 +28,10 @@ namespace MirrorWater
 
         [Header("遮罩（RawImage，使用 SinEdgeHole_MultiHole 材質）")]
         [SerializeField] private RawImage maskImage;
+        [SerializeField] private GameObject maskQuad;
+
+        [Header("Shader 材質")]
+        [SerializeField] private Material maskMat;
 
         [Header("輪播資料（ScriptableObjects）")]
         [SerializeField] private List<SkeletonSetData> sequenceDataList;
@@ -79,7 +83,7 @@ namespace MirrorWater
         {
             if (sequenceRoutine != null)
                 StopCoroutine(sequenceRoutine);
-
+            maskQuad.SetActive(false);
             isPlaying = true;
             sequenceRoutine = StartCoroutine(PlaySequenceLoop());
         }
@@ -110,12 +114,13 @@ namespace MirrorWater
             //    c.a = 0f;
             //    maskImage.color = c;
             //}
-
+            maskQuad.SetActive(false);
             Debug.Log("[InteractiveSequenceController] 停止輪播並清空畫面");
         }
 
         private IEnumerator PlaySequenceLoop()
         {
+            //maskQuad.SetActive(true);
             if (sequenceDataList == null || sequenceDataList.Count == 0)
             {
                 Debug.LogWarning("[InteractiveSequenceController] 沒有設定任何輪播資料");
@@ -142,9 +147,10 @@ namespace MirrorWater
                     if (runtimeMaskMaterial != null && data.bgSprite != null)
                     {
                         Texture tex = data.bgSprite.texture;
-                        runtimeMaskMaterial.SetTexture("_MainTex", tex);
-                        maskImage.canvasRenderer.SetMaterial(runtimeMaskMaterial, tex);
-                        maskImage.SetMaterialDirty();
+                        //runtimeMaskMaterial.SetTexture("_MainTex", tex);
+                        //maskImage.canvasRenderer.SetMaterial(runtimeMaskMaterial, tex);
+                        //maskImage.SetMaterialDirty();
+                        maskMat.SetTexture("_MainTex", tex);
                     }
 
                     // 取得角色群組
@@ -157,8 +163,14 @@ namespace MirrorWater
                     // -------------------
                     //   Fade-In
                     // -------------------
-                    //yield return StartCoroutine(FadeMask_RawImage(1f));
+
                     yield return null;
+                    maskQuad.SetActive(true);
+                    //Debug.Log($"顯示maskQuad，{maskQuad.activeSelf}");
+                    //Color finalColor = maskMat.GetColor("_Color");
+                    //finalColor.a = 1;
+                    //maskMat.SetColor("_Color", finalColor);
+                    //yield return StartCoroutine(FadeMask_Material(1f));
 
                     if (bgImage != null)
                     {
@@ -184,10 +196,15 @@ namespace MirrorWater
                     group.alpha = 0f;
 
                     yield return null;
-                    //yield return StartCoroutine(FadeMask_RawImage(0f));
+                    //yield return StartCoroutine(FadeMask_Material(0f));
+                    //finalColor = maskMat.GetColor("_Color");
+                    //finalColor.a = 0;
+                    //maskMat.SetColor("_Color", finalColor);
+                    maskQuad.SetActive(false);
+                    //Debug.Log($"隱藏maskQuad，{maskQuad.activeSelf}");
                 }
             }
-
+            //maskQuad.SetActive(false);
             Debug.Log("[InteractiveSequenceController] 結束無限循環輪播");
         }
 
@@ -237,5 +254,39 @@ namespace MirrorWater
             finalColor.a = targetAlpha;
             maskImage.color = finalColor;
         }
+        private IEnumerator FadeMask_Material(float targetAlpha)
+        {
+            if (maskMat == null)
+                yield break;
+
+            // 取得初始顏色
+            if (!maskMat.HasProperty("_Color"))
+            {
+                Debug.LogWarning("[InteractiveSequenceController] 材質沒有 _Color 屬性，無法執行漸變");
+                yield break;
+            }
+
+            //Color startColor = maskMat.GetColor("_Color");
+            //float startAlpha = startColor.a;
+            //float timer = 0f;
+
+            //while (timer < fadeDuration)
+            //{
+            //    float t = Mathf.Clamp01(timer / fadeDuration);
+            //    float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+
+            //    Color newColor = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
+            //    maskMat.SetColor("_Color", newColor);
+
+            //    timer += Time.deltaTime;
+            //    yield return null;
+            //}
+
+            // 確保最後一幀精準設定
+            Color finalColor = maskMat.GetColor("_Color");
+            finalColor.a = targetAlpha;
+            maskMat.SetColor("_Color", finalColor);
+        }
+
     }
 }
