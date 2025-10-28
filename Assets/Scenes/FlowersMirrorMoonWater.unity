@@ -5296,8 +5296,8 @@ MonoBehaviour:
   simpleHoleController: {fileID: 621612886}
   holeCentersForTest:
   - {x: 0.5, y: 0.5}
-  - {x: 0.25, y: 0.35}
-  - {x: 0.75, y: 0.65}
+  - {x: 0.15, y: 0.35}
+  - {x: 0.65, y: 0.65}
   - {x: 0.25, y: 0.65}
   - {x: 0.75, y: 0.35}
 --- !u!1 &1497484803
