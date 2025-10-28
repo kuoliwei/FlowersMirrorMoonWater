@@ -212,6 +212,7 @@ public class MultiDisplayActivator : MonoBehaviour
         }
         else
         {
+            Debug.Log($"{leftCameraTargetDisplay.text}");
             leftCameraTargetDisplay.text = "¿é¤J¿ù»~";
         }
     }

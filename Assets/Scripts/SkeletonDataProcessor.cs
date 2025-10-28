@@ -249,16 +249,34 @@ public class SkeletonDataProcessor : MonoBehaviour
         PruneMissingPersons(seen);
 
         // 輸出測試：顯示整合後的 hitList
+        //if (hitList.Count > 0)
+        //{
+        //    //holeController.HandleHoleData(hitList.ToArray());
+        //    //simpleHoleController.SetHolePosition(hitList[0]);
+        //    simpleHoleController.UpdateHoleCenters(hitList);
+        //    StringBuilder sb = new StringBuilder("[HitList] ");
+        //    foreach (var uv in hitList)
+        //        sb.Append($"({uv.x:F3},{uv.y:F3}) ");
+        //    Debug.Log(sb.ToString());
+        //}
+
         if (hitList.Count > 0)
         {
+            // 依 x 軸由小到大排序
+            hitList.Sort((a, b) => a.x.CompareTo(b.x));
+
+            // 送出排序後的 UV
             //holeController.HandleHoleData(hitList.ToArray());
             //simpleHoleController.SetHolePosition(hitList[0]);
             simpleHoleController.UpdateHoleCenters(hitList);
-            StringBuilder sb = new StringBuilder("[HitList] ");
+
+            // 除錯輸出
+            StringBuilder sb = new StringBuilder("[HitList Sorted] ");
             foreach (var uv in hitList)
                 sb.Append($"({uv.x:F3},{uv.y:F3}) ");
             Debug.Log(sb.ToString());
         }
+
         // 計算延遲
         float delay = (Time.realtimeSinceStartup - frame.recvTime) * 1000f;
         DateTime now = DateTime.Now;

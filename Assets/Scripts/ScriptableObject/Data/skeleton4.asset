@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: skeleton4
   bgSprite: {fileID: 21300000, guid: ef037a333c273bf408e9289a518e650f, type: 3}
-  displayDuration: 5
+  displayDuration: 300
