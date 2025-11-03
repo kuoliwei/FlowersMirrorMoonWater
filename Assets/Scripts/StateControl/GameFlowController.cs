@@ -9,6 +9,10 @@ namespace MirrorWater
         [SerializeField] private VideoPanelController videoPanel;
         [SerializeField] private InteractivePanelController interactivePanel;
         [SerializeField] private InteractiveSequenceController interactiveController;
+        
+        [Header("Background Music")]
+        [SerializeField] private BGMController bgmController;
+
         private GameState currentState;
 
         public void ChangeState(GameState newState)
@@ -41,6 +45,9 @@ namespace MirrorWater
         public void ChangeToVideo()
         {
             if (isTransitioning) return;
+
+            bgmController?.StopBGM(); // ← 影片狀態關 BGM
+
             stateMachine.ChangeState(new VideoState(this));
             StartCoroutine(TransitionPanels(interactivePanel, videoPanel));
         }
@@ -49,6 +56,9 @@ namespace MirrorWater
         public void ChangeToInteractive()
         {
             if (isTransitioning) return;
+
+            bgmController?.PlayInteractiveBGM(); // ← 互動狀態開 BGM
+
             stateMachine.ChangeState(new InteractiveState(this));
             StartCoroutine(TransitionPanels(videoPanel, interactivePanel));
         }
